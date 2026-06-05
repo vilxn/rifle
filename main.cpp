@@ -3,56 +3,40 @@
 
 #include "raylib.h"
 #include "src/ecs/EntityComponentSystem.h"
+#include "src/ecs/basicComponents/RigidBody.h"
+#include "src/ecs/basicComponents/Transform.h"
+#include "src/logger/Logger.h"
+#include "src/rendering/RenderingSystem.h"
+#include "src/rendering/TerrarianRenderSystem.h"
 
-namespace XERN {
-    struct Transform {
-        Vector2 position;
-    };
-
-    class RenderingSystem : public System {
-    public:
-        void Render() {
-            for (auto const& entity : m_entities) {
-                auto& transform = ECS::coordinator.GetComponent<Transform>(entity);
-
-                DrawRectangleV(transform.position, {10, 10}, RED);
-            }
-        }
-    };
-}
+using namespace ECS;
 
 int main() {
-    ECS::coordinator.Init();
-    ECS::coordinator.RegisterComponent<XERN::Transform>();
-    auto renderingSystem = ECS::coordinator.RegisterSystem<XERN::RenderingSystem>();
+    gECS.Init();
+    RegisterBasicComponents();
+    RegisterBasicSystems();
 
-    Signature signature;
-    signature.set(ECS::coordinator.GetComponentType<XERN::Transform>());
-    ECS::coordinator.SetSystemSignature<XERN::RenderingSystem>(signature);
-
-    std::random_device rd;
-    std::mt19937 generator(rd());
-    std::uniform_real_distribution<float> randPosition(0.0f, 600.0f);
-
-    for (int i = 0; i < 10; i++) {
-        auto entity = ECS::coordinator.CreateEntity();
-        ECS::coordinator.AddComponent(
-            entity,
-            XERN::Transform{
-                .position = {randPosition(generator), randPosition(generator)}
-            }
-        );
-    }
+    auto renderingSystem = gECS.GetSystem<RenderingSystem>();
+    auto terrarianRender = gECS.GetSystem<TerrarianRenderSystem>();
 
     InitWindow(1200, 600, "Xern2D");
     SetTargetFPS(60);
 
+    auto camera = Camera3D();
+    camera.fovy = 90;
+    camera.position = Vector3(0, 10, 10);
+    camera.target = Vector3(0, 0, 0);
+    camera.up = Vector3(0, 1, 0);
+
     while (!WindowShouldClose()) {
         BeginDrawing();
         ClearBackground(RAYWHITE);
+        BeginMode3D(camera);
 
         renderingSystem->Render();
+        terrarianRender->Render();
 
+        EndMode3D();
         EndDrawing();
     }
 

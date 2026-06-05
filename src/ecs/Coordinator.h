@@ -5,6 +5,7 @@
 #include "ComponentManager.h"
 #include "EntityManager.h"
 #include "SystemManager.h"
+#include "../logger/Logger.h"
 
 
 class Coordinator {
@@ -13,6 +14,8 @@ public:
         m_entityManager = std::make_unique<EntityManager>();
         m_systemManager = std::make_unique<SystemManager>();
         m_componentManager = std::make_unique<ComponentManager>();
+
+        XERN_INFO("Main ECS Coordinator is initialized")
     }
 
     Entity CreateEntity() {
@@ -52,8 +55,13 @@ public:
     }
 
     template<typename T>
-    [[nodiscard]] std::shared_ptr<T> RegisterSystem() {
-        return m_systemManager->RegisterSystem<T>();
+    void RegisterSystem() {
+        m_systemManager->RegisterSystem<T>();
+    }
+
+    template<typename T>
+    std::shared_ptr<T> GetSystem() {
+        return m_systemManager->GetSystem<T>();
     }
 
     template<typename T>

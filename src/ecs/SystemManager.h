@@ -11,14 +11,13 @@
 class SystemManager {
 public:
     template<typename T>
-    std::shared_ptr<T> RegisterSystem() {
+    void RegisterSystem() {
         const char* typeName = typeid(T).name();
 
         assert(!m_systems.contains(typeName) && "This system already registered");
 
         auto system = std::make_shared<T>();
-        m_systems.insert(std::make_pair(typeName, system));
-        return system;
+        m_systems[typeName] = std::static_pointer_cast<System>(system);
     }
 
     template<typename T>
@@ -49,6 +48,13 @@ public:
                 system->m_entities.erase(entity);
             }
         }
+    }
+
+    template<typename T>
+    std::shared_ptr<T> GetSystem() {
+        const char* typeName = typeid(T).name();
+        assert(m_systems.contains(typeName) && "System registration required");
+        return std::static_pointer_cast<T>(m_systems[typeName]);
     }
 
 private:

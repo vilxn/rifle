@@ -2,5 +2,9 @@
 #include "Coordinator.h"
 
 namespace ECS {
-    inline Coordinator coordinator;
+    inline Coordinator gECS;
+
+    void RegisterBasicComponents();
+
+    void RegisterBasicSystems();
 }

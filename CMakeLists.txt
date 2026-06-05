@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 4.1)
-project(Xern2D C CXX)
+project(Rifle C CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 
@@ -19,6 +19,16 @@ add_executable(${PROJECT_NAME} main.cpp
         src/ecs/SystemManager.h
         src/ecs/Coordinator.h
         src/ecs/EntityComponentSystem.h
+        src/ecs/basicComponents/Transform.h
+        src/ecs/EntityComponentSystem.cpp
+        src/ecs/basicComponents/RigidBody.h
+        src/logger/Logger.cpp
+        src/logger/Logger.h
+        src/rendering/RenderingSystem.cpp
+        src/rendering/RenderingSystem.h
+        src/rendering/TerrarianRenderSystem.cpp
+        src/rendering/TerrarianRenderSystem.h
+        src/components/HexMap.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
