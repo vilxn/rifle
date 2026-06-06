@@ -1,11 +1,5 @@
-#include <iostream>
-#include <random>
-
 #include "raylib.h"
 #include "src/ecs/EntityComponentSystem.h"
-#include "src/ecs/basicComponents/RigidBody.h"
-#include "src/ecs/basicComponents/Transform.h"
-#include "src/logger/Logger.h"
 #include "src/rendering/RenderingSystem.h"
 #include "src/rendering/TerrarianRenderSystem.h"
 
@@ -19,7 +13,8 @@ int main() {
     auto renderingSystem = gECS.GetSystem<RenderingSystem>();
     auto terrarianRender = gECS.GetSystem<TerrarianRenderSystem>();
 
-    InitWindow(1200, 600, "Xern2D");
+    SetWindowState(FLAG_MSAA_4X_HINT);
+    InitWindow(1200, 600, "Rifle");
     SetTargetFPS(60);
 
     auto camera = Camera3D();
